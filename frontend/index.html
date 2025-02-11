@@ -8,14 +8,15 @@
         body {
             position: relative;
             background-image: url('https://evelya-lexya-images.s3.amazonaws.com/a5b977ec-ef18-4efb-919f-8f7e1823dd0b');
-            background-size: cover;
-            background-position: center;
+            background-size: cover;  /* Ajuste l'image pour qu'elle couvre tout l'écran */
+            background-position: center;  /* Centre l'image */
             background-repeat: no-repeat;
             background-attachment: fixed;
             color: beige;
             font-family: Arial, sans-serif;
             text-align: center;
-        }
+            min-height: 100vh; /* Assure que l'image couvre tout l'écran */
+    }
         body::before {
             content: "";
             position: fixed;
@@ -159,6 +160,12 @@
             display: block; /* S'assure qu'il prend toute la largeur */
             text-align: center;
         }
+        @media (max-width: 768px) {
+    body {
+        background-size: contain; /* Ajuste pour que l'image ne soit pas coupée */
+        background-attachment: scroll; /* Fixe l’image sur mobile */
+    }
+}
     </style>
 </head>
 <body>
