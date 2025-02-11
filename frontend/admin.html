@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Codes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Vérifier un Code</h2>
+    <input type="text" id="code-input" placeholder="Entrer le code">
+    <button onclick="checkCode()">Vérifier</button>
+    <p id="result"></p>
+
+    <script>
+        const API_URL = "https://blackjack-api.onrender.com"; // Remplace par ton backend
+
+        async function checkCode() {
+            const code = document.getElementById("code-input").value.trim();
+            if (!code) {
+                alert("Veuillez entrer un code.");
+                return;
+            }
+
+            const response = await fetch(`${API_URL}/check-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").textContent = data.message;
+        }
+    </script>
+
+</body>
+</html>
