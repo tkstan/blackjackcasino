@@ -170,36 +170,13 @@
             text-align: center;
         }
         .promo-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px; /* Espacement entre les images */
-    margin: 20px auto;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.8); /* Fond blanc transparent */
-    border-radius: 15px;
-    max-width: 600px; /* Largeur maximale */
-    width: 90%; /* S'adapte à l'écran */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+          background: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
 }
 
-.promo-box a {
-    flex: 1; /* Permet aux images de s’adapter */
-    display: flex;
-    justify-content: center;
-}
-
-.promo-box img {
-    width: 100%; /* Ajuste automatiquement à la box */
-    max-width: 250px; /* Taille maximale des images */
-    height: auto;
-    border-radius: 10px;
-    transition: transform 0.2s ease-in-out;
-}
-
-.promo-box img:hover {
-    transform: scale(1.05); /* Effet zoom au survol */
-}
 
 /* 📌 Mode Responsive : Ajustement pour petits écrans */
 @media (max-width: 600px) {
@@ -397,14 +374,14 @@
     
     <button onclick="toggleRules()" class="rules-button">Règles du Black Jack</button>
     
-    <div class="promo-box">
-    <a href="https://reelul.ca" target="_blank">
+    <div class="promo-box">    
+        <a href="https://reelul.ca" target="_blank">
         <img src="https://reelul.ca/wp-content/uploads/2021/02/logo-officiel-header-reel.png" alt="Lien 1">
     </a>
-    <a href="https://www.instagram.com/comitecpaulaval/" target="_blank">
+        <a href="https://www.instagram.com/comitecpaulaval/" target="_blank">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfz4Ruhiutatp3eanBLSF4elMqbxuQWkWiDw&s" alt="Lien 2">
     </a>
-</div>
+    </div>
 
     <div id="rules" class="rules">
         <h2>Règles du Blackjack</h2>
