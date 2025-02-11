@@ -33,21 +33,32 @@
         const API_URL = "https://blackjackcasino-6jld.onrender.com"; // Remplace par ton backend
 
         async function checkCode() {
-            const code = document.getElementById("code-input").value.trim();
-            if (!code) {
-                alert("Veuillez entrer un code.");
-                return;
-            }
+    const code = document.getElementById("code-input").value.trim();
+    if (!code) {
+        alert("Veuillez entrer un code.");
+        return;
+    }
 
-            const response = await fetch(`${API_URL}/check-code`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code })
-            });
+    console.log("📤 Envoi du code :", code); // DEBUG
 
-            const data = await response.json();
-            document.getElementById("result").textContent = data.message;
-        }
+    try {
+        const response = await fetch(`${API_URL}/check-code`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code })
+        });
+
+        console.log("📥 Réponse reçue :", response); // DEBUG
+
+        const data = await response.json();
+        console.log("📊 Données retournées :", data); // DEBUG
+
+        document.getElementById("result").textContent = data.message;
+    } catch (error) {
+        console.error("❌ Erreur lors de la requête :", error);
+        document.getElementById("result").textContent = "Erreur de connexion au serveur.";
+    }
+}
     </script>
 
 </body>
