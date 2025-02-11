@@ -172,24 +172,40 @@
         .promo-box {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin: 15px auto;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    max-width: 250px;
+    align-items: center;
+    gap: 20px; /* Espacement entre les images */
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8); /* Fond blanc transparent */
+    border-radius: 15px;
+    max-width: 600px; /* Largeur maximale */
+    width: 90%; /* S'adapte à l'écran */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+}
+
+.promo-box a {
+    flex: 1; /* Permet aux images de s’adapter */
+    display: flex;
+    justify-content: center;
 }
 
 .promo-box img {
-    width: 100px; /* Taille des images */
+    width: 100%; /* Ajuste automatiquement à la box */
+    max-width: 250px; /* Taille maximale des images */
     height: auto;
-    border-radius: 5px;
+    border-radius: 10px;
     transition: transform 0.2s ease-in-out;
 }
 
 .promo-box img:hover {
-    transform: scale(1.1); /* Effet zoom au survol */
+    transform: scale(1.05); /* Effet zoom au survol */
 }
+
+/* 📌 Mode Responsive : Ajustement pour petits écrans */
+@media (max-width: 600px) {
+    .promo-box {
+        flex-direction: column; 
+
 
     </style>
 </head>
