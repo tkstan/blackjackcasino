@@ -173,27 +173,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Espace entre les logos */
+            gap: 20px;
             margin: 15px auto;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             max-width: 400px;
             width: 100%;
-            flex-wrap: wrap; /* Permet aux logos de passer en colonne si nécessaire */
         }
         
         .logo-box img {
-            width: 100%; /* Les logos prennent toute la largeur dispo */
-            max-width: 100px; /* Taille max des logos sur grand écran */
-            height: auto;
-            object-fit: contain;
+            width: 80px !important;  /* FORCÉ à 80px */
+            height: 80px !important; /* FORCÉ à 80px */
+            max-width: 80px !important;
+            max-height: 80px !important;
+            object-fit: cover; /* Coupe l’image pour remplir exactement 80x80px */
+            border-radius: 10px;
             transition: transform 0.2s ease-in-out;
         }
         
         .logo-box img:hover {
-            transform: scale(1.1); /* Effet zoom au survol */
+            transform: scale(1.1);
         }
+
     </style>
 </head>
 <body>
