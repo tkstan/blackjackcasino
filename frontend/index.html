@@ -17,15 +17,6 @@
             text-align: center;
             min-height: 100vh; /* Assure que l'image couvre tout l'écran */
 }
-
-    @media (max-width: 768px) {
-    body {
-        background-size: cover !important; /* S'assure que l'image prend toute la place */
-        background-position: center center !important; /* Centre l'image */
-        background-attachment: fixed !important; /* Fixe l'image sur mobile */
-        min-height: 100vh !important; /* Force la prise de toute la hauteur */
-    }
-}
         body::before {
             content: "";
             position: fixed;
@@ -181,21 +172,15 @@
             max-width: 400px;
             width: 100%;
         }
-        
         .logo-box img {
-            width: 80px !important;  /* FORCÉ à 80px */
-            height: 80px !important; /* FORCÉ à 80px */
+            display: block !important;
+            width: 80px !important;
+            height: 80px !important;
             max-width: 80px !important;
             max-height: 80px !important;
-            object-fit: cover; /* Coupe l’image pour remplir exactement 80x80px */
+            object-fit: cover !important;
             border-radius: 10px;
-            transition: transform 0.2s ease-in-out;
         }
-        
-        .logo-box img:hover {
-            transform: scale(1.1);
-        }
-
     </style>
 </head>
 <body>
@@ -203,13 +188,10 @@
         <h1>Black Jack Casino RÉEL x CPA</h1>
         <h3>Joue pour gagner un drink gratuit !</h3>
     </div>
-    <br>
-    
-<div class="logo-box">
-    <img src="https://reelul.ca/wp-content/uploads/2021/02/logo-officiel-header-reel.png" alt="RÉEL">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfz4Ruhiutatp3eanBLSF4elMqbxuQWkWiDw&s" alt="CPA">
-</div>
-    
+    <div class="logo-box">
+        <img src="https://reelul.ca/wp-content/uploads/2021/02/logo-officiel-header-reel.png" alt="RÉEL">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfz4Ruhiutatp3eanBLSF4elMqbxuQWkWiDw&s" alt="CPA">
+    </div>
     <br>
     <div class="game-info">Nombre de parties restantes: <span id="game-counter">3</span></div>
     <br>
