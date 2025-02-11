@@ -28,38 +28,61 @@
     <input type="text" id="code-input" placeholder="Entrer le code">
     <button onclick="checkCode()">Vérifier</button>
     <p id="result"></p>
+    <input type="text" id="name-input" placeholder="Entrer un prénom">
+<table border="1" id="valid-codes-table" style="margin: 20px auto; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Prénom</th>
+            <th>Code</th>
+            <th>Heure de validation</th>
+        </tr>
+    </thead>
+    <tbody id="valid-codes-list"></tbody>
+</table>
+
 
     <script>
-        const API_URL = "https://blackjackcasino-6jld.onrender.com"; // Remplace par ton backend
+    const API_URL = "https://blackjackcasino-6jld.onrender.com"; // Remplace par ton backend
 
-        async function checkCode() {
-    const code = document.getElementById("code-input").value.trim();
-    if (!code) {
-        alert("Veuillez entrer un code.");
-        return;
+    async function checkCode() {
+        const code = document.getElementById("code-input").value.trim();
+        const name = document.getElementById("name-input").value.trim();
+
+        if (!code || !name) {
+            alert("Veuillez entrer un code et un prénom.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/check-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").textContent = data.message;
+
+            if (data.success) {
+                addCodeToList(name, code);
+            }
+        } catch (error) {
+            console.error("❌ Erreur lors de la requête :", error);
+            document.getElementById("result").textContent = "Erreur de connexion au serveur.";
+        }
     }
 
-    console.log("📤 Envoi du code :", code); // DEBUG
+    function addCodeToList(name, code) {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
 
-    try {
-        const response = await fetch(`${API_URL}/check-code`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code })
-        });
-
-        console.log("📥 Réponse reçue :", response); // DEBUG
-
-        const data = await response.json();
-        console.log("📊 Données retournées :", data); // DEBUG
-
-        document.getElementById("result").textContent = data.message;
-    } catch (error) {
-        console.error("❌ Erreur lors de la requête :", error);
-        document.getElementById("result").textContent = "Erreur de connexion au serveur.";
+        const table = document.getElementById("valid-codes-list");
+        const row = table.insertRow();
+        row.insertCell(0).textContent = name;
+        row.insertCell(1).textContent = code;
+        row.insertCell(2).textContent = time;
     }
-}
-    </script>
+</script>
 
 </body>
 </html>
