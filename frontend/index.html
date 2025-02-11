@@ -19,10 +19,11 @@
 }
 
     @media (max-width: 768px) {
-        body {
-        background-size: cover; /* Ajuste mieux l'image sur mobile */
-        background-attachment: scroll; /* Fixe l’image sur mobile */
-        background-position: top center; /* Centre l'image sur les petits écrans */
+    body {
+        background-size: cover !important; /* S'assure que l'image prend toute la place */
+        background-position: center center !important; /* Centre l'image */
+        background-attachment: fixed !important; /* Fixe l'image sur mobile */
+        min-height: 100vh !important; /* Force la prise de toute la hauteur */
     }
 }
         body::before {
