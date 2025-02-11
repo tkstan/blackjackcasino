@@ -169,44 +169,18 @@
             display: block; /* S'assure qu'il prend toute la largeur */
             text-align: center;
         }
-    .promo-box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px; /* Espacement entre les images */
-        margin: 20px auto;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.8); /* Fond blanc transparent */
-        border-radius: 15px;
-        max-width: 2100px; /* Largeur maximale pour 2 images de 1000px */
-        width: 100%;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
-}
-
-    .promo-box a {
-    flex: 1; /* Permet aux images de s’adapter */
+        .promo-box {
     display: flex;
     justify-content: center;
-}
-
-    .promo-box img {
-    width: 1000px; /* Force la largeur */
-    height: 1000px; /* Force la hauteur */
-    object-fit: cover; /* Évite la déformation */
-    border-radius: 10px;
-    transition: transform 0.2s ease-in-out;
-}
-
-    .promo-box img:hover {
-    transform: scale(1.05); /* Effet zoom au survol */
-}
-
-/* 📌 Mode Responsive : Réduction sur écrans plus petits */
-@media (max-width: 2100px) {
-    .promo-box {
-        flex-direction: column; /* Passe en colonne sur petit écran */
-        max-width: 1000px;
-    }
+    align-items: center;
+    gap: 20px; /* Espacement entre les images */
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
+    border-radius: 15px;
+    max-width: 2100px; /* Largeur maximale pour 2 images */
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
 }
 
     </style>
