@@ -169,29 +169,31 @@
             display: block; /* S'assure qu'il prend toute la largeur */
             text-align: center;
         }
-.logo-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px; /* Espace entre les logos */
-    margin: 15px auto;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
-    border-radius: 10px;
-    max-width: 400px;
-    width: 100%;
-}
-
-.logo-box img {
-    width: 100px; /* Taille des logos */
-    height: auto;
-    object-fit: contain; /* Garde les proportions */
-    transition: transform 0.2s ease-in-out;
-}
-
-.logo-box img:hover {
-    transform: scale(1.1); /* Effet zoom au survol */
-}
+        .logo-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Espace entre les logos */
+            margin: 15px auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            flex-wrap: wrap; /* Permet aux logos de passer en colonne si nécessaire */
+        }
+        
+        .logo-box img {
+            width: 100%; /* Les logos prennent toute la largeur dispo */
+            max-width: 100px; /* Taille max des logos sur grand écran */
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .logo-box img:hover {
+            transform: scale(1.1); /* Effet zoom au survol */
+        }
     </style>
 </head>
 <body>
