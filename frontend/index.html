@@ -16,7 +16,15 @@
             font-family: Arial, sans-serif;
             text-align: center;
             min-height: 100vh; /* Assure que l'image couvre tout l'écran */
+}
+
+    @media (max-width: 768px) {
+        body {
+        background-size: cover; /* Ajuste mieux l'image sur mobile */
+        background-attachment: scroll; /* Fixe l’image sur mobile */
+        background-position: top center; /* Centre l'image sur les petits écrans */
     }
+}
         body::before {
             content: "";
             position: fixed;
@@ -160,12 +168,6 @@
             display: block; /* S'assure qu'il prend toute la largeur */
             text-align: center;
         }
-        @media (max-width: 768px) {
-    body {
-        background-size: contain; /* Ajuste pour que l'image ne soit pas coupée */
-        background-attachment: scroll; /* Fixe l’image sur mobile */
-    }
-}
     </style>
 </head>
 <body>
