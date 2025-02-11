@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Casino RÉEL x CPA</title>
+    <style>
+        body {
+            position: relative;
+            background-image: url('https://evelya-lexya-images.s3.amazonaws.com/a5b977ec-ef18-4efb-919f-8f7e1823dd0b');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: beige;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1); /* Opacité réglable */
+            z-index: -1;
+        }
+        .title-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: rgb(131, 17, 0);
+            margin: 0;
+        }
+        h3 {
+            color: rgb(131, 17, 0);
+            font-size: 20px;
+            font-style: italic;
+            margin: 5px 0 0;
+        }
+        .game-info {
+            background: rgba(100, 13, 0, 0.9);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid white;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .table {
+            background: rgba(100, 13, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .hand-container {
+            border: 2px solid white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            color : white
+        }
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .card {
+            width: 60px;
+            height: 90px;
+            background: white;
+            color: black;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        button {
+            background: white;
+            color: rgba(100, 13, 0, 0.9);
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: auto;
+            border-radius: 5px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(131, 17, 0, 0.8);
+            color: beige;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .overlay button {
+            margin-top: 20px;
+            background: beige;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            color : rgba(131, 17, 0, 0.8)
+        }
+        #victory-message, #defeat-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid beige;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: beige;
+            background: #4B0000;
+        }
+        .rules {
+            background: rgba(100, 13, 0, 0.9);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid white;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+        }
+        .rules-button {
+            display: block;
+            margin: 20px auto;
+            color : rgba(100, 13, 0, 0.9
+        }
+        .text-style {
+            font-size: 50px; /* Ajuste la taille selon tes besoins */
+            display: block; /* S'assure qu'il prend toute la largeur */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-box">    
+        <h1>Black Jack Casino RÉEL x CPA</h1>
+        <h3>Joue pour gagner un drink gratuit !</h3>
+    </div>
+    <br>
+    <div class="game-info">Nombre de parties restantes: <span id="game-counter">3</span></div>
+    <br>
+    <div class="table">
+        <div class="hand-container">
+            <h2>Main du croupier</h2>
+            <div class="cards" id="dealer-cards"></div>
+            <p>Score du croupier: <span id="dealer-score">0</span></p>
+        </div>
+        <div class="hand-container">
+            <h2>Votre main</h2>
+            <div class="cards" id="player-cards"></div>
+            <p>Score: <span id="player-score">0</span></p>
+        </div>
+        <button onclick="hit()">Tirer une carte</button>
+        <button onclick="stand()">Rester</button>
+        <div id="victory-overlay" class="overlay">
+            <p class="text-style"><span style="font-size: 100px;">👏🏻</span></p>
+            <p>Félicitations ! 
+            <br>
+            <br> Voici votre code unique a présenter au RÉEL pour ton cadeau :</p>
+            <p id="unique-code" style="font-size: 24px; font-weight: bold;"></p>
+            <button onclick="location.href='https://evelya.co/universite-laval/cpa/la-soiree-casino-8931';">TES BILLETS ICI !</button>
+    </div>
+    
+    <div id="defeat-overlay" class="overlay">
+        <p class="text-style"><span style="font-size: 100px;">😢</span></p>
+        <p>Vous avez perdu ! <br>Réessayez en cliquant ci-dessous.</p>
+        <button onclick="restartGame()">Recommencer</button>
+    </div>
+
+    <script>
+        let deck = [];
+        let playerCards = [];
+        let playerScore = 0;
+        let dealerCards = [];
+        let dealerScore = 0;
+        let gameCounter = parseInt(localStorage.getItem('gameCounter')) || 3;
+        document.getElementById('game-counter').textContent = gameCounter;
+
+        function dealInitialCards() {
+            for (let i = 0; i < 2; i++) {
+                playerCards.push(deck.pop());
+                dealerCards.push(deck.pop());
+            }
+            playerScore = playerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+            dealerScore = dealerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+            updateUI();
+        }
+      
+        function showOverlay(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function createDeck() {
+            const suits = ['♠', '♥', '♦', '♣'];
+            const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ value, suit });
+                }
+            }
+            deck = deck.sort(() => Math.random() - 0.5);
+        }
+
+        function getCardValue(card) {
+            if (['J', 'Q', 'K'].includes(card.value)) return 10;
+            if (card.value === 'A') return 11;
+            return parseInt(card.value);
+        }
+
+        function updateUI() {
+            document.getElementById('player-cards').innerHTML = playerCards.map(card => `<div class="card">${card.value}${card.suit}</div>`).join('');
+            document.getElementById('dealer-cards').innerHTML = dealerCards.map(card => `<div class="card">${card.value}${card.suit}</div>`).join('');
+            document.getElementById('player-score').textContent = playerScore;
+            document.getElementById('dealer-score').textContent = dealerScore;
+        }
+
+    function hit() {
+        if (gameCounter <= 0) return alert("Vous avez épuisé vos parties !");
+    
+        if (deck.length === 0) createDeck();
+    
+        // Tirage du joueur
+        let card = deck.pop();
+            playerCards.push(card);
+            playerScore += getCardValue(card);
+            updateUI();
+
+            setTimeout(() => {
+            // Tirage du croupier après 1 seconde
+                let dealerCard = deck.pop();
+            dealerCards.push(dealerCard);
+            dealerScore += getCardValue(dealerCard);
+            updateUI();
+
+        if (playerScore > 21) {
+            showOverlay('defeat-overlay');
+        } else if (playerScore === 21 || dealerScore > 21) {
+            showOverlay('victory-overlay');
+        }
+    }, 1000);
+}
+
+    function stand() {
+        // Le joueur passe son tour, le croupier joue jusqu'à 17 minimum
+        while (dealerScore < 17) {
+        let dealerCard = deck.pop();
+        dealerCards.push(dealerCard);
+        dealerScore += getCardValue(dealerCard);
+        updateUI();
+    }
+
+        setTimeout(() => {
+        if (dealerScore > 21) {
+            showOverlay('victory-overlay');
+        } else if (dealerScore >= playerScore) {
+            showOverlay('defeat-overlay');
+        } else {
+            showOverlay('victory-overlay');
+        }
+    }, 1000);
+    }
+        
+    function toggleRules() {
+            let rulesDiv = document.getElementById("rules");
+            if (rulesDiv.style.display === "none" || rulesDiv.style.display === "") {
+                rulesDiv.style.display = "block";
+            } else {
+                rulesDiv.style.display = "none";
+            }
+        }
+    
+    function restartGame() {
+            gameCounter--;
+            localStorage.setItem('gameCounter', gameCounter);
+            document.getElementById('game-counter').textContent = gameCounter;
+            location.reload();
+        }
+
+        createDeck();
+        updateUI();
+        dealInitialCards();
+        
+    const API_URL = "http://localhost:3000"; // Remplace par ton backend en ligne
+
+        async function generateUniqueCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+
+            const response = await fetch(`${API_URL}/save-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                return code;
+            } else {
+                return generateUniqueCode(); // Générer un autre code si collision
+            }
+        }
+
+        async function showOverlay(id) {
+            document.getElementById(id).style.display = 'flex';
+            
+            if (id === 'victory-overlay') {
+                const uniqueCode = await generateUniqueCode();
+                document.getElementById('unique-code').textContent = uniqueCode;
+            }
+        }
+    </script>
+    </div>
+    
+    <button onclick="toggleRules()" class="rules-button">Règles du Black Jack</button>
+    
+    <div id="rules" class="rules">
+        <h2>Règles du Blackjack</h2>
+        <ul>
+            <li>Le but du jeu est d'atteindre **21 points** ou de s'en approcher sans dépasser.</li>
+            <li>Les cartes numérotées ont leur valeur faciale, les figures valent **10**, et l'As vaut **1 ou 11**.</li>
+            <li>Le joueur commence avec **deux cartes** et peut choisir de "Tirer" une carte supplémentaire ou de "Rester".</li>
+            <li>Le croupier tire des cartes jusqu'à atteindre **au moins 17 points**.</li>
+            <li>Si le joueur dépasse 21, il perd automatiquement.</li>
+            <li>Si le croupier dépasse 21, le joueur gagne automatiquement.</li>
+            <li>Si le joueur a un meilleur score que le croupier sans dépasser 21, il gagne.</li>
+        </ul>
+    </div>
+</body>
+</html>
