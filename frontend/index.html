@@ -169,6 +169,28 @@
             display: block; /* S'assure qu'il prend toute la largeur */
             text-align: center;
         }
+        .promo-box {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px auto;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    max-width: 250px;
+}
+
+.promo-box img {
+    width: 100px; /* Taille des images */
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.promo-box img:hover {
+    transform: scale(1.1); /* Effet zoom au survol */
+}
+
     </style>
 </head>
 <body>
@@ -359,6 +381,15 @@
     
     <button onclick="toggleRules()" class="rules-button">Règles du Black Jack</button>
     
+    <div class="promo-box">
+    <a href="https://reelul.ca" target="_blank">
+        <img src="https://reelul.ca/wp-content/uploads/2021/02/logo-officiel-header-reel.png" alt="Lien 1">
+    </a>
+    <a href="https://www.instagram.com/comitecpaulaval/" target="_blank">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfz4Ruhiutatp3eanBLSF4elMqbxuQWkWiDw&s" alt="Lien 2">
+    </a>
+</div>
+
     <div id="rules" class="rules">
         <h2>Règles du Blackjack</h2>
         <ul>
