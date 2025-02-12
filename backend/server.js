@@ -24,7 +24,10 @@ app.use('/play', (req, res, next) => {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     
     db.get('SELECT COUNT(*) AS count FROM game_sessions WHERE ip_address = ?', [ip], (err, row) => {
-        if (err) return res.status(500).json({ success: false, message: "Erreur serveur." });
+        if (err) {
+            console.error("Erreur lors de la vérification du nombre de parties :", err);
+            return next(); // NE BLOQUE PAS LES AUTRES ROUTES EN CAS D'ERREUR
+        }
 
         if (row.count >= 5) {
             return res.status(403).json({ success: false, message: "Limite de 5 parties atteinte pour cette adresse IP." });
@@ -32,7 +35,10 @@ app.use('/play', (req, res, next) => {
 
         // Ajouter une nouvelle entrée pour suivre la session
         db.run('INSERT INTO game_sessions (ip_address) VALUES (?)', [ip], (err) => {
-            if (err) return res.status(500).json({ success: false, message: "Erreur serveur." });
+            if (err) {
+                console.error("Erreur lors de l'insertion de la session :", err);
+                return next(); // NE BLOQUE PAS TOUT LE SERVEUR
+            }
             next();
         });
     });
