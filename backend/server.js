@@ -56,6 +56,21 @@ function generateCode() {
     return code;
 }
 
+app.post('/save-code', (req, res) => {
+    const { name, code } = req.body;
+
+    if (!code) {
+        return res.status(400).json({ success: false, message: "Code manquant." });
+    }
+
+    db.run('INSERT INTO codes (name, code) VALUES (?, ?)', [name || "Anonyme", code], function (err) {
+        if (err) {
+            return res.status(400).json({ success: false, message: "Code déjà enregistré." });
+        }
+        res.json({ success: true, id: this.lastID });
+    });
+});
+
 // Ajouter un code généré automatiquement avec un nom
 app.post('/generate-code', (req, res) => {
     const { name } = req.body;
