@@ -168,7 +168,7 @@
         <h3>Joue pour gagner un drink gratuit !</h3>
     </div>
     <br>
-    <div class="game-info">Nombre de parties restantes: <span id="game-counter">5</span></div>
+    <div class="game-info">Nombre de parties restantes: <span id="game-counter">3</span></div>
     <br>
     <div class="table">
         <div class="hand-container">
@@ -208,7 +208,7 @@
         let playerScore = 0;
         let dealerCards = [];
         let dealerScore = 0;
-        let gameCounter = parseInt(localStorage.getItem('gameCounter')) || 5;
+        let gameCounter = parseInt(localStorage.getItem('gameCounter')) || 3;
         document.getElementById('game-counter').textContent = gameCounter;
 
         function dealInitialCards() {
@@ -347,33 +347,6 @@
                 document.getElementById('unique-code').textContent = uniqueCode;
             }
         }
-        
-        async function checkPlayLimit() {
-    try {
-        const response = await fetch("https://blackjackcasino-6jld.onrender.com/play");
-        const data = await response.json();
-        
-        if (!data.success) {
-            alert("Vous avez atteint la limite de 5 parties. Réessayez plus tard !");
-            return false;
-        }
-        
-        return true;
-    } catch (error) {
-        console.error("Erreur lors de la vérification de la limite :", error);
-        return false;
-    }
-}
-
-// Modifier les boutons pour vérifier la limite avant de jouer
-document.querySelectorAll("button").forEach(button => {
-    button.addEventListener("click", async (event) => {
-        const allowed = await checkPlayLimit();
-        if (!allowed) {
-            event.preventDefault(); // Empêcher l'action si limite atteinte
-        }
-    });
-});
     </script>
     </div>
     
