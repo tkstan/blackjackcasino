@@ -68,6 +68,24 @@ app.post('/start-game', checkIPLimit, (req, res) => {
     });
 });
 
+// Route pour réinitialiser le compteur de parties pour une adresse IP spécifique
+app.post('/reset-game-count', (req, res) => {
+    const { ip } = req.body;
+    if (!ip) {
+        return res.status(400).send("Adresse IP requise");
+    }
+    db.run("UPDATE ip_counts SET count = 0 WHERE ip = ?", [ip], function (err) {
+        if (err) {
+            return res.status(500).send("Erreur de base de données");
+        }
+        if (this.changes === 0) {
+            return res.status(404).send("Adresse IP non trouvée");
+        }
+        res.send("Compteur de parties réinitialisé pour l'adresse IP");
+    });
+});
+
+
 // Générer un code aléatoire
 function generateCode() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
