@@ -38,6 +38,21 @@
             background-color: #007bff;
             color: white;
         }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .random-btn {
+            background-color: green;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -54,14 +69,17 @@
                     <th>Nom</th>
                     <th>Code</th>
                     <th>Heure</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="code-table-body"></tbody>
         </table>
+        <button class="random-btn" onclick="pickRandomPerson()">Choisir un gagnant aléatoire</button>
+        <p id="winner"></p>
     </div>
 
     <script>
-        const API_URL = "https://blackjackcasino-6jld.onrender.com";
+        const API_URL = "http://localhost:3000";
 
         async function checkCode() {
             const name = document.getElementById("name-input").value.trim();
@@ -92,12 +110,42 @@
                 const tableBody = document.getElementById("code-table-body");
                 tableBody.innerHTML = "";
                 data.data.forEach(row => {
-                    tableBody.innerHTML += `<tr><td>${row.name}</td><td>${row.code}</td><td>${row.used_at}</td></tr>`;
+                    tableBody.innerHTML += `<tr>
+                        <td>${row.name}</td>
+                        <td>${row.code}</td>
+                        <td>${row.used_at}</td>
+                        <td><button class='delete-btn' onclick='deleteCode("${row.code}")'>Supprimer</button></td>
+                    </tr>`;
                 });
             } catch (error) {
                 console.error("Erreur de récupération des codes utilisés", error);
             }
         }
+
+        async function deleteCode(code) {
+            try {
+                await fetch(`${API_URL}/delete-code`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code })
+                });
+                fetchUsedCodes();
+            } catch (error) {
+                console.error("Erreur lors de la suppression du code", error);
+            }
+        }
+
+        function pickRandomPerson() {
+            const rows = document.querySelectorAll("#code-table-body tr");
+            if (rows.length === 0) {
+                document.getElementById("winner").textContent = "Aucun participant trouvé.";
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * rows.length);
+            const winner = rows[randomIndex].children[0].textContent;
+            document.getElementById("winner").textContent = `Gagnant : ${winner}`;
+        }
+        
         fetchUsedCodes();
     </script>
 </body>
