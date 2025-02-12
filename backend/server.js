@@ -72,6 +72,18 @@ app.post('/check-code', (req, res) => {
     });
 });
 
+// Supprimer un code de la base de données
+app.post('/delete-code', (req, res) => {
+    const { code } = req.body;
+
+    db.run('DELETE FROM codes WHERE code = ?', [code], function (err) {
+        if (err) {
+            return res.status(500).json({ success: false, message: "Erreur lors de la suppression du code." });
+        }
+        res.json({ success: true, message: "Code supprimé avec succès." });
+    });
+});
+
 // Récupérer tous les codes utilisés avec le nom et l'heure
 app.get('/used-codes', (req, res) => {
     db.all('SELECT name, code, used_at FROM codes WHERE used = 1 ORDER BY used_at DESC', [], (err, rows) => {
