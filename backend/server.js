@@ -1,12 +1,10 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
-const bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 
 // Connexion à la base de données
 const db = new sqlite3.Database('./blackjack.db', (err) => {
@@ -22,69 +20,6 @@ db.run(`CREATE TABLE IF NOT EXISTS codes (
     used INTEGER DEFAULT 0,
     used_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`);
-
-// Créer la table pour stocker les adresses IP et le nombre de parties
-db.run(`CREATE TABLE IF NOT EXISTS ip_counts (
-    ip TEXT PRIMARY KEY,
-    count INTEGER DEFAULT 0
-)`);
-
-// Middleware pour vérifier le nombre de parties par adresse IP
-function checkIPLimit(req, res, next) {
-    const ip = req.ip;
-    db.get("SELECT count FROM ip_counts WHERE ip = ?", [ip], (err, row) => {
-        if (err) {
-            return res.status(500).send("Erreur de base de données");
-        }
-        if (row && row.count >= 5) {
-            return res.status(403).send("Limite de parties atteinte pour cette adresse IP");
-        }
-        next();
-    });
-}
-
-// Route pour démarrer une nouvelle partie
-app.post('/start-game', checkIPLimit, (req, res) => {
-    const ip = req.ip;
-    db.get("SELECT count FROM ip_counts WHERE ip = ?", [ip], (err, row) => {
-        if (err) {
-            return res.status(500).send("Erreur de base de données");
-        }
-        if (row) {
-            db.run("UPDATE ip_counts SET count = count + 1 WHERE ip = ?", [ip], (err) => {
-                if (err) {
-                    return res.status(500).send("Erreur de base de données");
-                }
-                res.send("Nouvelle partie démarrée");
-            });
-        } else {
-            db.run("INSERT INTO ip_counts (ip, count) VALUES (?, ?)", [ip, 1], (err) => {
-                if (err) {
-                    return res.status(500).send("Erreur de base de données");
-                }
-                res.send("Nouvelle partie démarrée");
-            });
-        }
-    });
-});
-
-// Route pour réinitialiser le compteur de parties pour une adresse IP spécifique
-app.post('/reset-game-count', (req, res) => {
-    const { ip } = req.body;
-    if (!ip) {
-        return res.status(400).send("Adresse IP requise");
-    }
-    db.run("UPDATE ip_counts SET count = 0 WHERE ip = ?", [ip], function (err) {
-        if (err) {
-            return res.status(500).send("Erreur de base de données");
-        }
-        if (this.changes === 0) {
-            return res.status(404).send("Adresse IP non trouvée");
-        }
-        res.send("Compteur de parties réinitialisé pour l'adresse IP");
-    });
-});
-
 
 // Générer un code aléatoire
 function generateCode() {
