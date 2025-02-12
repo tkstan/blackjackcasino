@@ -3,86 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification des Codes</title>
+    <title>Administration - Vérification des Codes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 50px;
+            background-color: #f4f4f4;
+            padding: 20px;
         }
-        input {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px;
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 400px;
         }
-        button {
+        input, button {
+            width: 100%;
             padding: 10px;
+            margin: 10px 0;
             font-size: 16px;
-            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
         }
     </style>
 </head>
 <body>
-
-    <h2>Vérifier un Code</h2>
-    <input type="text" id="code-input" placeholder="Entrer le code">
-    <button onclick="checkCode()">Vérifier</button>
-    <p id="result"></p>
-    <input type="text" id="name-input" placeholder="Entrer un prénom">
-<table border="1" id="valid-codes-table" style="margin: 20px auto; border-collapse: collapse;">
-    <thead>
-        <tr>
-            <th>Prénom</th>
-            <th>Code</th>
-            <th>Heure de validation</th>
-        </tr>
-    </thead>
-    <tbody id="valid-codes-list"></tbody>
-</table>
-
+    <div class="container">
+        <h2>Vérifier un Code</h2>
+        <input type="text" id="name-input" placeholder="Entrer le nom">
+        <input type="text" id="code-input" placeholder="Entrer le code">
+        <button onclick="checkCode()">Vérifier</button>
+        <p id="result"></p>
+        <h3>Codes Utilisés</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Code</th>
+                    <th>Heure</th>
+                </tr>
+            </thead>
+            <tbody id="code-table-body"></tbody>
+        </table>
+    </div>
 
     <script>
-    const API_URL = "https://blackjackcasino-6jld.onrender.com"; // Remplace par ton backend
+        const API_URL = "http://localhost:3000";
 
-    async function checkCode() {
-        const code = document.getElementById("code-input").value.trim();
-        const name = document.getElementById("name-input").value.trim();
-
-        if (!code || !name) {
-            alert("Veuillez entrer un code et un prénom.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_URL}/check-code`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code })
-            });
-
-            const data = await response.json();
-            document.getElementById("result").textContent = data.message;
-
-            if (data.success) {
-                addCodeToList(name, code);
+        async function checkCode() {
+            const name = document.getElementById("name-input").value.trim();
+            const code = document.getElementById("code-input").value.trim();
+            if (!name || !code) {
+                alert("Veuillez entrer un nom et un code.");
+                return;
             }
-        } catch (error) {
-            console.error("❌ Erreur lors de la requête :", error);
-            document.getElementById("result").textContent = "Erreur de connexion au serveur.";
+            
+            try {
+                const response = await fetch(`${API_URL}/check-code`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, code })
+                });
+                const data = await response.json();
+                document.getElementById("result").textContent = data.message;
+                fetchUsedCodes();
+            } catch (error) {
+                document.getElementById("result").textContent = "Erreur de connexion au serveur.";
+            }
         }
-    }
 
-    function addCodeToList(name, code) {
-        const now = new Date();
-        const time = now.toLocaleTimeString();
-
-        const table = document.getElementById("valid-codes-list");
-        const row = table.insertRow();
-        row.insertCell(0).textContent = name;
-        row.insertCell(1).textContent = code;
-        row.insertCell(2).textContent = time;
-    }
-</script>
-
+        async function fetchUsedCodes() {
+            try {
+                const response = await fetch(`${API_URL}/used-codes`);
+                const data = await response.json();
+                const tableBody = document.getElementById("code-table-body");
+                tableBody.innerHTML = "";
+                data.data.forEach(row => {
+                    tableBody.innerHTML += `<tr><td>${row.name}</td><td>${row.code}</td><td>${row.used_at}</td></tr>`;
+                });
+            } catch (error) {
+                console.error("Erreur de récupération des codes utilisés", error);
+            }
+        }
+        fetchUsedCodes();
+    </script>
 </body>
 </html>
