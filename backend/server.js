@@ -20,7 +20,7 @@ db.run(`CREATE TABLE IF NOT EXISTS game_sessions (
 )`);
 
 // 🔥 Middleware pour limiter à 5 parties par IP
-app.use((req, res, next) => {
+app.use('/play', (req, res, next) => {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     
     db.get('SELECT COUNT(*) AS count FROM game_sessions WHERE ip_address = ?', [ip], (err, row) => {
