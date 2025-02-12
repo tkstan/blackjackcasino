@@ -12,19 +12,43 @@ const db = new sqlite3.Database('./blackjack.db', (err) => {
     console.log('✅ Connecté à la base de données.');
 });
 
-// Création de la table pour stocker les codes
+// Création de la table pour stocker les codes avec nom et timestamp
 db.run(`CREATE TABLE IF NOT EXISTS codes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
     code TEXT UNIQUE,
     used INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    used_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`);
 
-// Ajouter un code en base
-app.post('/save-code', (req, res) => {
-    const { code } = req.body;
+// Générer un code aléatoire
+function generateCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+        code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+}
 
-    db.run('INSERT INTO codes (code) VALUES (?)', [code], function (err) {
+// Ajouter un code généré automatiquement avec un nom
+app.post('/generate-code', (req, res) => {
+    const { name } = req.body;
+    const code = generateCode();
+
+    db.run('INSERT INTO codes (name, code) VALUES (?, ?)', [name, code], function (err) {
+        if (err) {
+            return res.status(400).json({ success: false, message: "Erreur lors de l'enregistrement du code." });
+        }
+        res.json({ success: true, code });
+    });
+});
+
+// Ajouter un code en base avec un nom
+app.post('/save-code', (req, res) => {
+    const { name, code } = req.body;
+
+    db.run('INSERT INTO codes (name, code) VALUES (?, ?)', [name, code], function (err) {
         if (err) {
             return res.status(400).json({ success: false, message: "Code déjà enregistré." });
         }
@@ -32,20 +56,27 @@ app.post('/save-code', (req, res) => {
     });
 });
 
-// Vérifier si un code existe et n’a pas été utilisé
+// Vérifier un code et stocker l'utilisation
 app.post('/check-code', (req, res) => {
-    const { code } = req.body;
+    const { name, code } = req.body;
 
     db.get('SELECT * FROM codes WHERE code = ? AND used = 0', [code], (err, row) => {
         if (err) return res.status(500).json({ success: false, message: "Erreur serveur." });
 
         if (row) {
-            // Marquer le code comme utilisé
-            db.run('UPDATE codes SET used = 1 WHERE code = ?', [code]);
+            db.run('UPDATE codes SET used = 1, name = ?, used_at = CURRENT_TIMESTAMP WHERE code = ?', [name, code]);
             res.json({ success: true, message: "Code valide." });
         } else {
             res.json({ success: false, message: "Code invalide ou déjà utilisé." });
         }
+    });
+});
+
+// Récupérer tous les codes utilisés avec le nom et l'heure
+app.get('/used-codes', (req, res) => {
+    db.all('SELECT name, code, used_at FROM codes WHERE used = 1 ORDER BY used_at DESC', [], (err, rows) => {
+        if (err) return res.status(500).json({ success: false, message: "Erreur serveur." });
+        res.json({ success: true, data: rows });
     });
 });
 
