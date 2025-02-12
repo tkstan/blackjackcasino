@@ -79,7 +79,7 @@
     </div>
 
     <script>
-        const API_URL = "https://blackjackcasino-6jld.onrender.com";
+        const API_URL = "http://localhost:3000";
 
         async function checkCode() {
             const name = document.getElementById("name-input").value.trim();
@@ -123,13 +123,19 @@
         }
 
         async function deleteCode(code) {
+            if (!confirm("Voulez-vous vraiment supprimer ce code ?")) return;
             try {
-                await fetch(`${API_URL}/delete-code`, {
+                const response = await fetch(`${API_URL}/delete-code`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code })
                 });
-                fetchUsedCodes();
+                const data = await response.json();
+                if (data.success) {
+                    fetchUsedCodes();
+                } else {
+                    alert("Erreur lors de la suppression du code.");
+                }
             } catch (error) {
                 console.error("Erreur lors de la suppression du code", error);
             }
