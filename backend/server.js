@@ -12,39 +12,14 @@ const db = new sqlite3.Database('./blackjack.db', (err) => {
     console.log('✅ Connecté à la base de données.');
 });
 
-// Création de la table pour stocker les parties jouées
-db.run(`CREATE TABLE IF NOT EXISTS game_sessions (
+// Création de la table pour stocker les codes avec nom et timestamp
+db.run(`CREATE TABLE IF NOT EXISTS codes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ip_address TEXT,
-    played_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    name TEXT,
+    code TEXT UNIQUE,
+    used INTEGER DEFAULT 0,
+    used_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`);
-
-// 🔥 Middleware pour limiter à 5 parties par IP
-app.use('/play', (req, res, next) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    
-    db.get('SELECT COUNT(*) AS count FROM game_sessions WHERE ip_address = ?', [ip], (err, row) => {
-        if (err) {
-            console.error("Erreur lors de la vérification du nombre de parties :", err);
-            return next(); // NE BLOQUE PAS LES AUTRES ROUTES EN CAS D'ERREUR
-        }
-
-        if (row.count >= 5) {
-            return res.status(403).json({ success: false, message: "Limite de 5 parties atteinte pour cette adresse IP." });
-        }
-
-        // Ajouter une nouvelle entrée pour suivre la session
-        db.run('INSERT INTO game_sessions (ip_address) VALUES (?)', [ip], (err) => {
-            if (err) {
-                console.error("Erreur lors de l'insertion de la session :", err);
-                return next(); // NE BLOQUE PAS TOUT LE SERVEUR
-            }
-            next();
-        });
-    });
-});
-
-// Routes existantes (ajoutées en dessous de la limite de parties par IP)
 
 // Générer un code aléatoire
 function generateCode() {
@@ -56,21 +31,6 @@ function generateCode() {
     return code;
 }
 
-app.post('/save-code', (req, res) => {
-    const { name, code } = req.body;
-
-    if (!code) {
-        return res.status(400).json({ success: false, message: "Code manquant." });
-    }
-
-    db.run('INSERT INTO codes (name, code) VALUES (?, ?)', [name || "Anonyme", code], function (err) {
-        if (err) {
-            return res.status(400).json({ success: false, message: "Code déjà enregistré." });
-        }
-        res.json({ success: true, id: this.lastID });
-    });
-});
-
 // Ajouter un code généré automatiquement avec un nom
 app.post('/generate-code', (req, res) => {
     const { name } = req.body;
@@ -81,6 +41,18 @@ app.post('/generate-code', (req, res) => {
             return res.status(400).json({ success: false, message: "Erreur lors de l'enregistrement du code." });
         }
         res.json({ success: true, code });
+    });
+});
+
+// Ajouter un code en base avec un nom
+app.post('/save-code', (req, res) => {
+    const { name, code } = req.body;
+
+    db.run('INSERT INTO codes (name, code) VALUES (?, ?)', [name, code], function (err) {
+        if (err) {
+            return res.status(400).json({ success: false, message: "Code déjà enregistré." });
+        }
+        res.json({ success: true, id: this.lastID });
     });
 });
 
@@ -118,11 +90,6 @@ app.get('/used-codes', (req, res) => {
         if (err) return res.status(500).json({ success: false, message: "Erreur serveur." });
         res.json({ success: true, data: rows });
     });
-});
-
-// Route pour tester la limitation
-app.get('/play', (req, res) => {
-    res.json({ success: true, message: "Partie autorisée !" });
 });
 
 // Démarrer le serveur
